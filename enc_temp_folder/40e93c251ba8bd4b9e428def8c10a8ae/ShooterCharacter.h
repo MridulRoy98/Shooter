@@ -31,9 +31,6 @@ protected:
 	// Look up/down at a given rate
 	void LookUpRate(float Rate);
 
-	// Called when fire button is pressed
-	void FireWeapon();
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -60,9 +57,6 @@ private:
 	// Look up/down rate in deg/sec
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	float BaseLookUpRate;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"))
-	class USoundCue* FireSound;
 
 public:
 

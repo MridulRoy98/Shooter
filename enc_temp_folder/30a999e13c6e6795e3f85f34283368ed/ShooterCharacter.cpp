@@ -5,8 +5,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Sound/SoundCue.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter() :
@@ -81,15 +79,6 @@ void AShooterCharacter::LookUpRate(float Rate)
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
-void AShooterCharacter::FireWeapon()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Shoot !!"));
-	if (FireSound)
-	{
-		UGameplayStatics::PlaySound2D(this, FireSound);
-	}
-}
-
 // Called every frame
 void AShooterCharacter::Tick(float DeltaTime)
 {
@@ -118,9 +107,5 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	// Makes character jump
 	PlayerInputComponent->BindAction("Jump",IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	
-	// Makes character shoot
-	PlayerInputComponent->BindAction("FireButton", IE_Pressed, this, &AShooterCharacter::FireWeapon);
-
 }
 
