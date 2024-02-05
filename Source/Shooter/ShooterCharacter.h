@@ -21,8 +21,15 @@ protected:
 
 	// Called for forward/backward input
 	void MoveForward(float value);
+
 	// Called for sidways input
 	void MoveRight(float value);
+
+	// Turning sideways at a given rate
+	void TurnAtRate(float Rate);
+
+	// Look up/down at a given rate
+	void LookUpRate(float Rate);
 
 public:	
 	// Called every frame
@@ -42,6 +49,14 @@ private:
 	// This camera follows the character
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+	// Turn rate, in deg/sec
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	float BaseTurnRate;
+
+	// Look up/down rate in deg/sec
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	float BaseLookUpRate;
 
 public:
 
