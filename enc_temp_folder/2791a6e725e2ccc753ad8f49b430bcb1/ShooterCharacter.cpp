@@ -3,7 +3,6 @@
 
 #include "ShooterCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Camera/CameraComponent.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter()
@@ -13,15 +12,9 @@ AShooterCharacter::AShooterCharacter()
 
 	// Create a camera boom (pulls in towards character if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 300.f; // The camera follows at this distance behind the character
 	CameraBoom->bUsePawnControlRotation = true;
-	CameraBoom->SetupAttachment(RootComponent);
-
-	// Create follow camera
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach camera at the end of the boom
-	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-
 
 }
 
