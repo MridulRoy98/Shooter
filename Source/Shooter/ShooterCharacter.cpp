@@ -33,11 +33,11 @@ AShooterCharacter::AShooterCharacter() :
 
 	// Prevents character from rotating with the camera
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = true;
+	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
 	// Character moves in the direction of input
-	GetCharacterMovement()->bOrientRotationToMovement = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 540.f, 0.f); //...at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
@@ -87,14 +87,16 @@ void AShooterCharacter::LookUpRate(float Rate)
 
 void AShooterCharacter::FireWeapon()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Shoot !!"));
+	// Plays bullet sound on left click
 	if (FireSound)
 	{
 		UGameplayStatics::PlaySound2D(this, FireSound);
 	}
-
+	//////////////////////////////////////////////////////////////////////////////////////
+	
 	// Getting reference to a socket which is added in weapon bone
 	const USkeletalMeshSocket* BarrelSocket = GetMesh()->GetSocketByName("BarrelSocket");
+
 	if (BarrelSocket)
 	{
 		const FTransform SocketTransform = BarrelSocket->GetSocketTransform(GetMesh());
@@ -103,7 +105,55 @@ void AShooterCharacter::FireWeapon()
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SocketTransform);
 		}
+
+		// Get current size of the viewport
+		FVector2D ViewportSize;
+		if (GEngine && GEngine->GameViewport)
+		{
+			GEngine->GameViewport->GetViewportSize(ViewportSize);
+		}
+
+		// Get screen space location of crosshairs
+		FVector2D CrosshairLocation(ViewportSize.X / 2.f, ViewportSize.Y / 2.f);
+		FVector CrosshairWorldPosition;
+		FVector CrosshairWorldDirection;
 		
+		//Get world position and direction of crosshairs
+		bool bScreentoWorld = UGameplayStatics::DeprojectScreenToWorld(UGameplayStatics::GetPlayerController(this, 0),
+			CrosshairLocation, CrosshairWorldPosition, CrosshairWorldDirection);
+
+		if (bScreentoWorld) // if projection was successful
+		{
+			FHitResult ScreenTraceHit;
+			const FVector Start{ CrosshairWorldPosition };
+			const FVector End{ CrosshairWorldPosition + CrosshairWorldDirection * 50'000.f };
+			
+			// Set beam end point to line trace end point
+			FVector BeamEndPoint{ End };
+
+			// Trace outward from crosshairs world location
+			GetWorld()->LineTraceSingleByChannel(ScreenTraceHit, Start, End, ECollisionChannel::ECC_Visibility);
+			if (ScreenTraceHit.bBlockingHit)
+			{
+				// BeamEndPoint is now trace hit location
+				BeamEndPoint = ScreenTraceHit.Location;
+				if (ImpactParticles)
+				{
+					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, BeamEndPoint);
+				}
+
+				if (BeamParticles)
+				{
+					UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BeamParticles, SocketTransform);
+
+					if (Beam)
+					{
+						Beam->SetVectorParameter(FName("Target"), BeamEndPoint);
+					}
+				}
+			}
+		}
+		/*
 		FHitResult FireHit;
 		const FVector Start{ SocketTransform.GetLocation() };
 		const FQuat Rotation{ SocketTransform.GetRotation() };
@@ -135,7 +185,7 @@ void AShooterCharacter::FireWeapon()
 				}
 			}
 
-		}
+		}*/
 	}
 
 	// Playing shooting animation
