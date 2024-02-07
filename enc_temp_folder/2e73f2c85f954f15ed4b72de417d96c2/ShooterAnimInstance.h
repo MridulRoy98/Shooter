@@ -15,12 +15,9 @@ class SHOOTER_API UShooterAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 
 public:
-
-	// Similar to Tick function
 	UFUNCTION(BlueprintCallable)
 	void UpdateAnimationProperties(float DeltaTime);
 	
-	// Acts like BeginPlay for animations
 	virtual void NativeInitializeAnimation() override;
 
 private:
