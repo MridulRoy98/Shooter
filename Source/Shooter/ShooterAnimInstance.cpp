@@ -33,13 +33,11 @@ void UShooterAnimInstance::UpdateAnimationProperties(float DeltaTime)
 			then calculates the offset between two rotators */
 		FRotator AimRotation = ShooterCharacter->GetBaseAimRotation();
 		FRotator MovementRotation = UKismetMathLibrary::MakeRotFromX(ShooterCharacter->GetVelocity());
-		float MovementOffsetYaw = UKismetMathLibrary::NormalizedDeltaRotator(MovementRotation, AimRotation).Yaw;
+		MovementOffsetYaw = UKismetMathLibrary::NormalizedDeltaRotator(MovementRotation, AimRotation).Yaw;
+		FString MovementOffsetYawString = FString::Printf(TEXT("%f"), MovementOffsetYaw);
 
-		FString hh = FString::Printf(TEXT("%f"), MovementOffsetYaw);
-
-		UE_LOG(LogTemp, Warning, TEXT("Movement Offset Yaw: %s"), *hh);
-
-
+		// Log Movement Offset Yaw
+		UE_LOG(LogTemp, Warning, TEXT("Movement Offset Yaw: %s"), *MovementOffsetYawString);
 	}
 }
 
