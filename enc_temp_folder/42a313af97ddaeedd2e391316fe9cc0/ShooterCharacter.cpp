@@ -14,10 +14,7 @@
 // Sets default values
 AShooterCharacter::AShooterCharacter() :
 	BaseTurnRate(45.f),
-	BaseLookUpRate(45.f),
-	bAiming(false),
-	CameraDefaultFov(0.f),
-	ZoomedFOV(60.f)
+	BaseLookUpRate(45.f)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -50,11 +47,6 @@ AShooterCharacter::AShooterCharacter() :
 void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (FollowCamera)
-	{
-		CameraDefaultFov = GetFollowCamera()->FieldOfView;
-	}
 }
 
 void AShooterCharacter::MoveForward(float value)
@@ -195,18 +187,6 @@ bool AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, 
 	return false;
 }
 
-void AShooterCharacter::AimingButtonPressed()
-{
-	bAiming = true;
-	GetFollowCamera()->SetFieldOfView(ZoomedFOV);
-}
-
-void AShooterCharacter::AimingButtonReleased()
-{
-	bAiming = false;
-	GetFollowCamera()->SetFieldOfView(CameraDefaultFov);
-}
-
 // Called every frame
 void AShooterCharacter::Tick(float DeltaTime)
 {
@@ -241,9 +221,6 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	
 	// Makes character shoot
 	PlayerInputComponent->BindAction("FireButton", IE_Pressed, this, &AShooterCharacter::FireWeapon);
-	
-	// Camera zooms in to aim
-	PlayerInputComponent->BindAction("Aiming", IE_Pressed, this, &AShooterCharacter::AimingButtonPressed);
-	PlayerInputComponent->BindAction("Aiming", IE_Released, this, &AShooterCharacter::AimingButtonReleased);
+
 }
 
