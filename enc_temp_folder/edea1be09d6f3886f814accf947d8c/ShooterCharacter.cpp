@@ -29,13 +29,7 @@ AShooterCharacter::AShooterCharacter() :
 	HipTurnRate(90.f),
 	HipLookUpRate(90.f),
 	AimingTurnRate(20.f),
-	AimingLookUpRate(20.f),
-
-	// Mouse sensitivity adjusters
-	MouseHipLookUpRate(1.0f),
-	MouseHipTurnRate(1.0f),
-	MouseAimingLookUpRate(0.2f),
-	MouseAimingTurnRate(0.2f)
+	AimingLookUpRate(20.f)
 
 	////////////////////////////////////////////////////////////////////////
 {
@@ -226,35 +220,6 @@ void AShooterCharacter::AimingButtonReleased()
 	bAiming = false;
 }
 
-// Look sensitivity for mouse
-void AShooterCharacter::Turn(float value)
-{
-	float ScaleFactor{};
-	if (bAiming)
-	{
-		ScaleFactor = MouseAimingTurnRate;
-	}
-	else
-	{
-		ScaleFactor = MouseHipTurnRate;
-	}
-	AddControllerYawInput(value * ScaleFactor);
-}
-
-void AShooterCharacter::LookUp(float value)
-{
-	float ScaleFactor{};
-	if (bAiming)
-	{
-		ScaleFactor = MouseAimingLookUpRate;
-	}
-	else
-	{
-		ScaleFactor = MouseAimingLookUpRate;
-	}
-	AddControllerPitchInput(value * ScaleFactor);
-}
-
 // Called every frame
 void AShooterCharacter::Tick(float DeltaTime)
 {
@@ -297,8 +262,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AShooterCharacter::LookUpRate);
 
 	// Mouse look/turn keybinds
-	PlayerInputComponent->BindAxis("Turn", this, &AShooterCharacter::Turn);
-	PlayerInputComponent->BindAxis("LookUp", this, &AShooterCharacter::LookUp);
+	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	// Makes character jump
 	PlayerInputComponent->BindAction("Jump",IE_Pressed, this, &ACharacter::Jump);
