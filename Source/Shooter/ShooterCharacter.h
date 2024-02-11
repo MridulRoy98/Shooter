@@ -48,6 +48,13 @@ protected:
 	// Rotate controller based on mouse y movement
 	void LookUp(float value);
 
+	void FireButtonPressed();
+	void FireButtonReleased();
+	void StartFireTimer();
+
+	UFUNCTION()
+	void AutoFireReset();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -148,8 +155,14 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
 	float MouseAimingLookUpRate;
 	
+	// Left mouse button / RT pressed
+	bool bFireButtonPressed;
+
+	bool bShouldFire;
 	
-	
+	float AutomaticFireRate;
+
+	FTimerHandle AutoFireTimer;
 
 public:
 
