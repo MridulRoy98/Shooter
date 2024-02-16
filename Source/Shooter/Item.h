@@ -34,7 +34,7 @@ private:
 	class UBoxComponent* CollisionBox;
 
 	// Pops up when player looks at it
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "User Interface", meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* PickUpWidget;
 
 public:
